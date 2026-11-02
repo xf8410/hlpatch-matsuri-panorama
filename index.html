@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>hlpatch 工作线全景 · 11-01/02 五新仓整理</title>
+<style>
+:root{
+  --bg:#f6f8fa; --card:#ffffff; --ink:#1c2430; --sub:#5a6572; --line:#e3e7ec;
+  --blue:#0b6bcb; --blue-weak:#eaf2fb; --green:#0b6b4f; --green-weak:#e7f3ee;
+  --warn:#a04a00; --warn-weak:#fdf2e5; --bad:#9c2f2f; --bad-weak:#fbeeee;
+  --code-bg:#f0f3f6; --mono:ui-monospace,"SF Mono",Consolas,"Liberation Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.62}
+main{max-width:900px;margin:0 auto;padding:14px 14px 60px}
+@media(min-width:700px){ main{padding:24px 20px 80px} body{font-size:15.5px} }
+section{scroll-margin-top:12px}
+h1{font-size:1.5rem;line-height:1.3;margin:6px 0 4px}
+@media(min-width:700px){ h1{font-size:1.8rem} }
+h2{font-size:1.13rem;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+@media(min-width:700px){ h2{font-size:1.25rem} }
+h3{font-size:1rem;margin:14px 0 6px}
+p{margin:6px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:14px 15px;margin:12px 0}
+@media(min-width:700px){ .card{padding:18px 22px} }
+.sub{color:var(--sub);font-size:.86em}
+.badge{display:inline-block;padding:1px 9px;border-radius:99px;font-size:.74em;
+  font-weight:600;vertical-align:2px;white-space:nowrap}
+.b-blue{background:var(--blue-weak);color:var(--blue)}
+.b-green{background:var(--green-weak);color:var(--green)}
+.b-warn{background:var(--warn-weak);color:var(--warn)}
+.b-gray{background:#eef0f3;color:var(--sub)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+  padding:10px 12px;overflow-x:auto;font-family:var(--mono);font-size:.8rem;
+  line-height:1.5;margin:8px 0}
+@media(min-width:700px){ pre{font-size:.84rem} }
+code{font-family:var(--mono);background:var(--code-bg);border-radius:4px;
+  padding:1px 5px;font-size:.86em}
+pre code{background:none;padding:0}
+.addr{color:var(--blue);font-weight:600}
+.ok{color:var(--green);font-weight:600}
+.no{color:var(--bad);font-weight:600}
+.toc a{display:block;padding:7px 10px;border-radius:8px;color:var(--ink);
+  text-decoration:none;border:1px solid transparent;margin:2px 0}
+.toc a:hover{background:var(--blue-weak);border-color:var(--line)}
+.toc .n{display:inline-block;width:1.7em;color:var(--blue);font-weight:700}
+.top-link{display:inline-block;margin-top:8px;font-size:.85rem;color:var(--blue);
+  text-decoration:none}
+.flow{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+@media(min-width:700px){ .flow{flex-direction:row;align-items:stretch} }
+.flow .node{flex:1;background:var(--code-bg);border:1px solid var(--line);
+  border-radius:8px;padding:8px 10px;font-size:.85rem}
+.flow .node b{display:block;color:var(--blue);font-size:.9rem}
+.flow .arr{text-align:center;color:var(--sub);font-size:1rem;line-height:1.4}
+@media(min-width:700px){ .flow .arr{align-self:center} }
+.repo-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.repo-head h3{margin:0;font-size:1.05rem}
+.meta{color:var(--sub);font-size:.82rem;margin:2px 0 6px}
+ul.tight{margin:6px 0;padding-left:1.3em}
+ul.tight li{margin:3px 0}
+.tag{font-family:var(--mono);font-size:.78rem;background:var(--code-bg);
+  border:1px solid var(--line);border-radius:5px;padding:0 5px}
+.verify-ok{border-left:4px solid var(--green)}
+.verify-warn{border-left:4px solid var(--warn)}
+.grid2{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:700px){ .grid2{grid-template-columns:1fr 1fr} }
+.footer{text-align:center;color:var(--sub);font-size:.8rem;margin-top:28px}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+<h1>hlpatch 工作线全景</h1>
+<p class="sub">2026-11-01 ~ 11-02 新建五个仓库的内容整理 · 含反汇编结果独立复核（capstone 5.0.9）</p>
+<p><span class="badge b-blue">5 个仓库</span> <span class="badge b-green">47 个提交</span> <span class="badge b-gray">全部单 main 分支</span> <span class="badge b-warn">汇编结果已验证</span></p>
+</header>
+
+<nav class="card toc" id="toc">
+<h2>📑 目录（点击跳转）</h2>
+<a href="#s1"><span class="n">1</span>五仓全景 —— 它们怎么连起来</a>
+<a href="#s2"><span class="n">2</span>逐仓速览 —— 每个仓库干什么</a>
+<a href="#s3"><span class="n">3</span>汇编结果专区 —— 四个地址逐个讲</a>
+<a href="#s3-5"><span class="n">3.5</span>验证结论 —— 对了什么、错了什么</a>
+<a href="#s4"><span class="n">4</span>反汇编七批次 —— 追查路线图</a>
+<a href="#s5"><span class="n">5</span>推理链存档 —— 「怎么想的」</a>
+<a href="#s6"><span class="n">6</span>复验路径 —— 想自己核对怎么看</a>
+</nav>
+
+<!-- ============ 1 全景 ============ -->
+<section class="card" id="s1">
+<h2>1 · 五仓全景 —— 它们怎么连起来</h2>
+<p>这五个仓库是同一条工作线的五个角色：<b>游戏里取数 → 插件读出来 → 落盘回放 → 反汇编追源头 → 过程留档</b>。</p>
+<div class="flow">
+  <div class="node"><b>🎮 赛马娘（IL2CPP）</b>育成剧本15「骏大祭」运行中</div>
+  <div class="arr">↓&nbsp;注入</div>
+  <div class="node"><b>🔌 hlpatch SO（18765）</b>内存读取 + 反汇编端点<br><span class="sub">改造规格书 → <code>hlpatch-readall-spec</code></span></div>
+  <div class="arr">↓&nbsp;推/拉</div>
+  <div class="node"><b>📥 接收端（18766）</b>帧序列落盘对账<br><span class="sub"><code>matsuri-capture</code> + 回放 <code>ura-replay</code></span></div>
+</div>
+<div class="flow">
+  <div class="node"><b>🔍 反汇编档案</b><span class="sub"><code>uma-single-mode-disasm</code>：原始字节 → capstone → 结论</span></div>
+  <div class="arr">↔&nbsp;互相引用</div>
+  <div class="node"><b>🧠 推理链存档</b><span class="sub"><code>hlpatch-reasoning-log</code>：只记判断过程，不记数据</span></div>
+</div>
+<p class="sub">一句话：前三个仓是「取数的管道」，后两个仓是「想明白的证据」。管道负责跑通，证据负责不出错。</p>
+<p class="top-link">↑ <a href="#toc">回目录</a></p>
+</section>
+
+<!-- ============ 2 逐仓 ============ -->
+<section class="card" id="s2">
+<h2>2 · 逐仓速览</h2>
+
+<div class="repo-head"><h3>uma-single-mode-disasm</h3><span class="badge b-blue">反汇编档案</span><span class="badge b-gray">17 提交</span></div>
+<p class="meta">2026-11-02 建 · 18 篇文档 + 4 份原始字节 + CI 反汇编流水线</p>
+<p>剧本15 的<b>反汇编与协议解码总档案</b>。核心纪律：每条结论标证据等级——<span class="tag">[测] 实测</span><span class="tag">[码] 反汇编</span><span class="tag">[文] 文档</span><span class="tag">[无证] 未验证</span>，手解助记符一律标「待复核」不许当结论。</p>
+<ul class="tight">
+  <li>协议：<b>不加密明文 msgpack</b>，单条请求最长 <b>9 层嵌套</b></li>
+  <li>数据集：<code>WorkSingleModeScenarioFestaDataSet</code> 九个数组字段偏移全表（+16 起每 8 字节一个）</li>
+  <li>演目计量 <code>CommandGainActGaugeArray</code> 只含 type <b>3/4/7/8</b>，不参与普通训练</li>
+  <li>训练后的 Act 对象<b>已被回收</b>（指针悬空，实测）——想读只能趁构造瞬间</li>
+</ul>
+
+<div class="repo-head"><h3>hlpatch-readall-spec</h3><span class="badge b-blue">改造规格书</span><span class="badge b-gray">12 提交</span></div>
+<p class="meta">2026-11-01 建 · README 单文件手册 + 7 个反汇编批次</p>
+<p>hlpatch 插件「<b>全格式可读</b>」改造的施工图：8 项改动每项都给 grep 锚点字符串（不信行号会漂移），改完立刻验证。配套 <b>FESTA-DISASM 01~07</b> 七个批次把剧本15 逐层追穿（详见第 4 节）。</p>
+
+<div class="repo-head"><h3>hlpatch-reasoning-log</h3><span class="badge b-blue">推理存档</span><span class="badge b-gray">2 提交</span></div>
+<p class="meta">2026-11-01 建 · 首篇：比赛回合训练数据抓取</p>
+<p>只记「<b>怎么想的</b>」不记数据。为什么要单独开仓——数据可以重抓，判断过程不能重放；出问题要复盘的是「哪一步是猜的、哪一步是验的、假设在哪被推翻」。首篇讲清了著名的 <code>44444</code> 之谜：那不是数据，是 <b>ObscuredInt 的加密钥匙</b>（每个 int 存成 key + key^真实值 两字段，转储里钥匙被反复打印）。</p>
+
+<div class="repo-head"><h3>ura-replay</h3><span class="badge b-blue">回放功能</span><span class="badge b-gray">10 提交</span></div>
+<p class="meta">2026-11-01 建 · Rust SO · 约 4.9 万行</p>
+<p>hlpatch SO 加上<b>落盘回放</b>：<code>replay.jsonl</code> 每帧记录，<code>replay_enabled</code> 运行时可开关。10 个提交大半是修 CI（NDK 交叉编译、Rust 钉 1.97.1）——新仓 CI 只构建不改源码，绿了才算数。</p>
+
+<div class="repo-head"><h3>matsuri-capture</h3><span class="badge b-blue">接收端</span><span class="badge b-gray">6 提交</span></div>
+<p class="meta">2026-11-01 建 · v0.1.2 · Rust 引擎 + Android APK + 手机面板</p>
+<p>骏大祭真机数据接收端：SO 在 18765 输出，本端 18766 收，落成可回放帧序列，<b>用来对账找模拟器的 bug</b>。铁律：不换算、不猜、不改名，缺值一律 <code>-1</code>——「没有」和「是 0」必须长得不一样。四个落盘文件：<code>frames</code> 解析帧、<code>deltas</code> 差分、<code>sources</code> 原文逐字不改、<code>rejected</code> 拒收帧。</p>
+<p class="top-link">↑ <a href="#toc">回目录</a></p>
+</section>
+
+<!-- ============ 3 汇编专区 ============ -->
+<section class="card" id="s3">
+<h2>3 · 汇编结果专区 —— 四个地址逐个讲</h2>
+<p class="sub">每条按「这是什么（文字）→ 关键汇编（代码）→ 说明什么（效果）」展开。代码全部经过本地 capstone 5.0.9 独立反汇编复核，与仓库 CI 产物一致。</p>
+<p><b>工具链</b>：<code>/il2cpp/read_mem</code> 取原始字节 → 落 <code>raw/*.txt</code> → GitHub Actions 跑 <code>tools/disasm.py</code>（capstone）→ 出 <code>out/*.asm</code> 逐条汇编 + 立即数扫描。<b>纪律：手解禁止入结论</b>——先落字节过机器，再讨论语义。</p>
+
+<h3>① 构造函数 · TrainingCommandEntity..ctor <code class="addr">@0x7547a5e304</code></h3>
+<p><b>这是什么</b>：造「训练命令实体」的函数——游戏每次生成训练选项时，把命令 ID、演目增量字典、事件标志三样装进对象。约 500 字节。</p>
+<pre><code>; 参数落位（capstone 实测）
+0x7547a5e3f4  str   w22, [x20, #0x10]   ; 参数2 → +16  CommandId
+0x7547a5e4d0  bl    #0x7543427748       ; 调 thunk 造字典 ←旧手解误作 0x70e43844
+0x7547a5e4d8  str   x0,  [x20, #0x18]   ; 字典返回值 → +24
+0x7547a5e4d4  and   w8,  w19, #1        ; 参数4 取最低位
+0x7547a5e4dc  strb  w8,  [x20, #0x20]   ; → +32  IsUpperTrainingEventOccurred
+0x7547a5e4f8  ret                        ; 函数体止于此</code></pre>
+<p><b>说明什么</b>：三个字段偏移（+16 / +24 / +32）全部实锤；字典<b>来自外部调用一次成型</b>，构造函数里没有内联常量（立即数扫描为空）；中途还有一层<b>全局缓存</b>（首次构造和后续复用走不同路径）。这也排除了「增量在构造时算死」的假设。</p>
+
+<h3>② 三连 thunk · 字典构造入口 <code class="addr">@0x7543427748</code></h3>
+<p><b>这是什么</b>：三个长得一模一样的「转发壳」，每只 84 字节，紧挨着排。自己不算任何东西，只搬寄存器然后尾跳。构造函数调的是第一个。</p>
+<pre><code>0x7543427748  str   x30, [sp, #-0x30]!
+0x7543427754  ldr   x8, [x3, #0x38]     ; 延迟初始化探测
+0x7543427764  cbnz  x8, #+0x28          ; 已初始化则跳过
+0x7543427770  bl    #0x7542aa40c8       ; 类初始化
+0x7543427778  ldr   x4, [x8, #0x18]     ; 第4参 = 初始化结果 +0x18
+0x7543427798  b     #0x754342a684       ; 尾调用 → 真实实现
+
+三胞胎出口（capstone 复核全对）：
+  0x7543427748 → 0x754342a684   ← 构造函数用的这只
+  0x754342779c → 0x754342aa38
+  0x75434277f0 → 0x754342adec</code></pre>
+<p><b>说明什么</b>：这一层<b>零业务逻辑</b>（立即数扫描为空）。整条地址链是 <code>构造 0x7547a5e4d0 → thunk 0x7543427748 → 实现 0x754342a684</code>。另两只 thunk 推测是同模式的其他重载（只有地址证据，暂无调用方证据）。</p>
+
+<h3>③ 通用集合装配壳 · 真实实现 <code class="addr">@0x754342a684</code></h3>
+<p><b>这是什么</b>：IL2CPP 泛型字典的「装配车间」——不是演目逻辑。双延迟初始化、三重空值检查、接口方法表线性查找，一应俱全。</p>
+<pre><code>; 形参落位
+0x754342a698  ldr   x8, [x4, #0x38]
+0x754342a69c  mov   x21, x4       ; 静态源
+0x754342a6a4  mov   x22, x2       ; 包装对象
+0x754342a6ac  mov   x20, x0       ; CommandId
+; 三重空值检查（任一为空 → 抛异常）
+0x754342a6dc  cbz   x20, #+0x260
+; 接口方法表线性查找
+0x754342a734  ldrh  w9, [x8, #0x12e]   ; 方法数
+0x754342a73c  ldr   x10, [x8, #0xb0]   ; 表起点
+0x754342a748  cmp   x11, x1            ; 逐项比对
+; 收尾：拿到方法指针后虚调用
+0x754342a778  ldp   x8, x1, [x0]
+0x754342a780  blr   x8</code></pre>
+<p><b>说明什么</b>：证实「演目增量在字典构造层计算」的假设<b>被排除</b>——它只装配集合。这是上游追查六条排除链的第五条（前四条：getter 内计算 ✗ / 构造内联常量 ✗ / MDB 表 ✗ / Define 静态表 ✗）。</p>
+
+<h3>④ 极简 getter <code class="addr">@0x7547a565e0</code>（流水线自测样本）</h3>
+<p><b>这是什么</b>：8 字节、两条指令——直接返回对象 +0x18 处的字段，正是演目字典。构造函数写进 +24，这里就从 +24 读出，读写对上了。</p>
+<pre><code>0x7547a565e0  ldr   x0, [x0, #0x18]   ; 返回 this+24 的字典字段
+0x7547a565e4  ret</code></pre>
+<p><b>说明什么</b>：读字典这个动作<b>没有任何计算</b>——想找增量来源，必须去「写字典的那一侧」，于是有了上面 ①→②→③ 的追查链。</p>
+<p class="top-link">↑ <a href="#toc">回目录</a></p>
+</section>
+
+<!-- ============ 3.5 验证结论 ============ -->
+<section class="card" id="s3-5">
+<h2>3.5 · 验证结论 —— 对了什么、错了什么</h2>
+<p class="sub">验证方法：本地 capstone 5.0.9 独立解码全部 4 份原始字节文件，与仓库文档断言逐条比对（与 CI 同引擎、不同环境，交叉验证）。</p>
+
+<div class="card verify-ok" style="margin:8px 0">
+<h3 style="margin-top:0">✅ 复核通过（全部一致）</h3>
+<ul class="tight">
+  <li>构造函数三个字段偏移 <code>+0x10 / +0x18 / +0x20</code> ✓</li>
+  <li>构造函数 <code>bl #0x7543427748</code>（CTOR-VERIFIED 修正后的值）✓</li>
+  <li>thunk 三胞胎结构与三条尾跳目标 <code>a684 / aa38 / adec</code> ✓</li>
+  <li>装配壳形参落位、三重空值检查、接口方法表线性查找、blr 虚调用收尾 ✓</li>
+  <li>构造函数体止于 <code>0x7547a5e4f8 ret</code>，与 ret_offsets 口径一致 ✓</li>
+</ul>
+</div>
+
+<div class="card verify-warn" style="margin:8px 0">
+<h3 style="margin-top:0">⚠️ 发现两处文档内伤（原仓待修，不影响汇编本身）</h3>
+<p><b>1. README 关键地址表未同步</b><br>
+README.md 第 47 行仍写着旧手解错误值 <code class="no">0x70e43844</code>（标着「手解·待复核」），但 docs/CTOR-VERIFIED.md 早已用 capstone 修正为 <code class="ok">0x7543427748</code>——我的复核确认修正值正确，README 那行是没删干净的残留。</p>
+<p><b>2. GET-GAIN 文档贴错了代码段</b><br>
+DISASM-GET-GAIN-ACT-GAUGE.md 贴出的「getter 24 条指令」，经逐字节比对与<b>构造函数开头 39/40 字节相同</b>（仅 1 字节手抄差），实际是错拿了构造函数的段落，不是 getter 本体。getter 真身就是上面第 ④ 条的两条指令。文档里「纯 TryGetValue 尾调用」的中间过程描述需要复核；不过「getter 无计算」这个最终结论反而更成立了。</p>
+</div>
+
+<div class="card" style="margin:8px 0">
+<h3 style="margin-top:0">🔧 仓库自己抓出的手解三错（值得记一笔）</h3>
+<p>CTOR-VERIFIED.md 记录了手解 vs capstone 的对照，三处全被抓到：</p>
+<ul class="tight">
+  <li>序言首条：<code class="no">str x29</code> → <code class="ok">str x30</code>（寄存器认错）</li>
+  <li>布尔掩码：<code class="no">and #3</code> → <code class="ok">and #1</code>（掩码位数错）</li>
+  <li>bl 目标：<code class="no">0x70E43844</code> → <code class="ok">0x7543427748</code>（imm26 符号位移算错，差了十倍以上）</li>
+</ul>
+<p class="sub">第三处最要命——如果不校验，后续会沿完全错误的地址查下去。所以才立了「任何手算地址一律先落 raw 过 capstone」的纪律。</p>
+</div>
+<p class="top-link">↑ <a href="#toc">回目录</a></p>
+</section>
+
+<!-- ============ 4 批次 ============ -->
+<section class="card" id="s4">
+<h2>4 · 反汇编七批次 —— 追查路线图</h2>
+<p class="sub">hlpatch-readall-spec/disasm/ · 全部 2026-11-02 一天内完成 · 每批记录「dump 了什么、取到什么地址、读出什么结论」</p>
+<div class="grid2">
+<div class="card" style="margin:6px 0"><b>批01 · 起步</b><p class="sub" style="margin:4px 0">确认反汇编端点只回 ARM64 原始字节，建立分批落盘流程</p></div>
+<div class="card" style="margin:6px 0"><b>批02 · 写入者追查</b><p class="sub" style="margin:4px 0">谁写入 IsUpperTrainingEventOccurred、転成自动选择、buff 状态来源</p></div>
+<div class="card" style="margin:6px 0"><b>批03 · 设施链贯通</b><p class="sub" style="margin:4px 0">稽古设施等级 ↔ 进度条 ↔ 溢出事件，一条链完整串起</p></div>
+<div class="card" style="margin:6px 0"><b>批04 · 友人机制</b><p class="sub" style="margin:4px 0">追加の稽古 = 友人特殊机制，由剧本 buff 触发（用户指正后修正方向）</p></div>
+<div class="card" style="margin:6px 0"><b>批05 · 182 类清单</b><p class="sub" style="margin:4px 0">拿到完整 182 个剧本15 类分层；回答「追加稽古算不算友人非外出事件」</p></div>
+<div class="card" style="margin:6px 0"><b>批06 · 友人身份落地</b><p class="sub" style="margin:4px 0">用户给候选 id 30323，本批查穿：吾妻身份实锤</p></div>
+</div>
+<div class="card" style="margin:6px 0"><b>批07 · 字段表+加密盘点</b>（收官批次）<p class="sub" style="margin:4px 0">运行时类字段表全实测绘档（ActEntity 9 字段全裸 int32 / TrainingCommandEntity 3 字段）；更正「FriendOutingGainActLevel +0x88 Obscured」属于 master 行类不是运行时类——<b>master 行走 Obscured 加密、运行时走裸 int32，两套表不能混用</b>；字典定位与加密体系盘点</p></div>
+<p class="top-link">↑ <a href="#toc">回目录</a></p>
+</section>
+
+<!-- ============ 5 推理链 ============ -->
+<section class="card" id="s5">
+<h2>5 · 推理链存档 —— 「怎么想的」</h2>
+<p>hlpatch-reasoning-log 首篇（2026-11-01）讲了一个典型样本：<b>转储里怎么到处都是 44444</b>？</p>
+<pre><code>444444 = 0x6C81C = 本局的 ObscuredInt 加解密 key
+
+内存里：[ key = 0x6C81C ][ hidden = key ^ 真实值 ]
+真实值 = hidden ^ key</code></pre>
+<p>每个 int 都拆成两个字段存，所以每个 ObscuredInt 都会让 <code>1c c8 06 00</code>（钥匙的小端字节）在转储里出现一次。一个训练 7 个 ObscuredInt，五个训练就是 35 次——看起来「怎么全是 44444」，其实是<b>同一把钥匙被反复打印</b>。这类「噪音来源解释」正是该仓的收藏方向。</p>
+<p class="top-link">↑ <a href="#toc">回目录</a></p>
+</section>
+
+<!-- ============ 6 复验 ============ -->
+<section class="card" id="s6">
+<h2>6 · 复验路径 —— 想自己核对怎么看</h2>
+<ul class="tight">
+  <li>原始字节：<code>uma-single-mode-disasm/raw/</code> 四个 txt（0000: xx xx 格式）</li>
+  <li>CI 产物：该仓 Actions 跑 <code>tools/disasm.py</code> 出 <code>out/*.asm</code></li>
+  <li>本地复验：<code>pip install capstone</code> 后对 raw 逐行喂 <code>Cs(CS_ARCH_ARM64, CS_MODE_LITTLE_ENDIAN)</code> 即可逐条解码（本页就是这么验的）</li>
+  <li>字段偏移现查端点：<code>/il2cpp/dump</code>（不背偏移，每次现查）</li>
+  <li>本页地址基准：游戏 686 版 + hlpatch 当前工作线，偏移随版本漂移，别跨版本套用</li>
+</ul>
+<p class="sub">五个原仓库全部公开可访问，链接：</p>
+<ul class="tight">
+  <li>github.com/xf8410/uma-single-mode-disasm</li>
+  <li>github.com/xf8410/hlpatch-readall-spec</li>
+  <li>github.com/xf8410/hlpatch-reasoning-log</li>
+  <li>github.com/xf8410/ura-replay</li>
+  <li>github.com/xf8410/matsuri-capture</li>
+</ul>
+<p class="top-link">↑ <a href="#toc">回目录</a></p>
+</section>
+
+<p class="footer">整理于 2026-11-02 · 单 main 分支 · 汇编断言经 capstone 5.0.9 独立复核<br>亮色纸质风 · 响应式（手机 / 电脑同一页自适应）</p>
+
+</main>
+</body>
+</html>
